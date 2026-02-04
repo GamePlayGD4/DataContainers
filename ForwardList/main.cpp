@@ -43,11 +43,42 @@ public:
 	}
 	void push_back(int Data)
 	{
+		if (Head == nullptr)return push_front(Data);
 		Element* New = new Element(Data);
 		Element* Temp = Head;
 		while (Temp->pNext) Temp = Temp->pNext;
 		Temp->pNext = New;
 	}
+
+	void insert(int Data, int Index)
+	{
+		if (Index == 0)return push_front(Data);
+		Element* New = new Element(Data); 
+
+		Element* Temp = Head;
+		for (int i = 0; i < Index - 1; i++)
+		{
+			if (Temp->pNext == nullptr)break;
+			Temp = Temp->pNext;
+		}
+		New->pNext = Temp->pNext;
+		Temp->pNext = New;
+	}
+
+	void pop_front()
+	{
+		Element* Erased = Head;
+		Head = Head->pNext;
+		delete Erased;
+	}
+	void pop_back()
+	{
+		Element* Temp = Head;
+		while (Temp->pNext->pNext)Temp = Temp->pNext;
+		delete Temp->pNext;
+		Temp->pNext = nullptr;
+	}
+
 	void print()const
 	{
 		Element* Temp = Head;
@@ -68,9 +99,15 @@ void main()
 	ForwardList list;
 	for (int i = 0; i < n; i++)
 	{
-		list.push_front(rand() % 100);
+		list.push_back(rand() % 100);
 	}
 	list.print();
-	list.push_back(123);
+	//list.push_back(123);
+	//list.pop_back();
+	int Index;
+	int value;
+	cout << "Введите индекс добавляемого элемента: "; cin >> Index;
+	cout << "Введите значение добавляемого элемента: "; cin >> value;
+	list.insert(value, Index);
 	list.print();
 }
