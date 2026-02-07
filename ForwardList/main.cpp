@@ -10,25 +10,30 @@ class Element
 {
 	int Data;
 	Element* pNext;
+	static int count;
 public:
 	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
+		count++;
 		cout << "EConstructor:\t" << this << endl;
 	}
 	~Element()
 	{
+		count--;
 		cout << "EDestructor:\t" << this << endl;
 	}
 	friend class ForwardList;
 };
-
+int Element::count = 0;
 class ForwardList
 {
 	Element* Head;
+	int size;
 public:
 	ForwardList()
 	{
 		Head = nullptr;
+		size = 0;
 		cout << "LConstructor:\t" << this << endl;
 	}
 	~ForwardList()
@@ -40,6 +45,7 @@ public:
 		Element* New = new Element(Data);
 		New->pNext = Head;
 		Head = New;
+		size++;
 	}
 	void push_back(int Data)
 	{
@@ -48,6 +54,7 @@ public:
 		Element* Temp = Head;
 		while (Temp->pNext) Temp = Temp->pNext;
 		Temp->pNext = New;
+		size++;
 	}
 
 	void insert(int Data, int Index)
@@ -63,6 +70,7 @@ public:
 		}
 		New->pNext = Temp->pNext;
 		Temp->pNext = New;
+		size++;
 	}
 
 	void pop_front()
@@ -70,6 +78,7 @@ public:
 		Element* Erased = Head;
 		Head = Head->pNext;
 		delete Erased;
+		size--;
 	}
 	void pop_back()
 	{
@@ -77,7 +86,44 @@ public:
 		while (Temp->pNext->pNext)Temp = Temp->pNext;
 		delete Temp->pNext;
 		Temp->pNext = nullptr;
+		size--;
 	}
+
+	// ////////
+
+	void erase(int Index)
+	{
+		if (Head == nullptr)
+		{
+			cout << "Список пуст" << endl;
+			return;
+		}
+
+		if (Index < 0 || Index >= size)
+		{
+			cout << "Неверный индекс" << endl;
+			return;
+		}
+
+		if (Index == 0)
+		{
+			pop_front();
+			return;
+		}
+
+		Element* Temp = Head;
+		for (int i = 0; i < Index - 1; i++)
+		{
+			Temp = Temp->pNext;
+		}
+
+		Element* Erased = Temp->pNext; 
+		Temp->pNext = Erased->pNext;
+		delete Erased;                 
+		size--;                     
+	}
+
+	/// /////////////
 
 	void print()const
 	{
@@ -87,13 +133,22 @@ public:
 			cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 			Temp = Temp->pNext;
 		}
+		cout << "Количество элементов списка: " << size << endl;
+		cout << "Общее количество элементов : " << Element::count << endl;
 	}
 };
+
+//#define BASE_CHECK
+//#define SIZE_CHECK
+//#define HOME_WORK_1
+#define ERASE_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	cout << "Hello ForwardList" << endl;
+	//cout << "Hello ForwardList" << endl;
+
+#ifdef BASE_CHECK
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
 	ForwardList list;
@@ -110,4 +165,49 @@ void main()
 	cout << "Введите значение добавляемого элемента: "; cin >> value;
 	list.insert(value, Index);
 	list.print();
+#endif // BASE_CHECK
+
+#ifdef SIZE_CHECK
+	ForwardList list1;
+	list1.push_back(3);
+	list1.push_back(5);
+	list1.push_back(8);
+	list1.push_back(13);
+	list1.push_back(21);
+
+	ForwardList list2;
+	list2.push_back(34);
+	list2.push_back(55);
+	list2.push_back(89);
+
+	list1.print();
+	list2.print();
+#endif // SIZE_CHECK
+
+#ifdef HOME_WORK_1
+	ForwardList list(5);
+	for (int i = 0; i < list.get_size(); i++)
+	{
+		list[i] = rand() % 100;
+	}
+	for (int i = 0; i < list.get_size(); i++)
+	{
+		cout << list[i] << tab;
+	}
+	cout << endl;
+#endif // HOME_WORK_1
+
+#ifdef ERASE_CHECK
+	ForwardList list1;
+	list1.push_back(1);
+	list1.push_back(2);
+	list1.push_back(3);
+
+	list1.print();
+
+	list1.erase(1);
+
+	list1.print();
+#endif // ERASE_CHECK
+
 }
