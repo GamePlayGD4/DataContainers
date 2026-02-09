@@ -30,15 +30,30 @@ class ForwardList
 	Element* Head;
 	int size;
 public:
+	int get_size()const
+	{
+		return size;
+	}
 	ForwardList()
 	{
 		Head = nullptr;
 		size = 0;
 		cout << "LConstructor:\t" << this << endl;
 	}
+	explicit ForwardList(int size):ForwardList()
+	{
+		while (size--)push_front(0);
+		cout << "1argConstructor:\t" << this << endl;
+	}
 	~ForwardList()
 	{
 		cout << "LDestructor:\t" << this << endl;
+	}
+	int& operator[](int Index)
+	{
+		Element* Temp = Head;
+		for (int i = 0; i < Index; i++)Temp = Temp->pNext;
+		return Temp->Data;
 	}
 	void push_front(int Data)
 	{
@@ -140,8 +155,8 @@ public:
 
 //#define BASE_CHECK
 //#define SIZE_CHECK
-//#define HOME_WORK_1
-#define ERASE_CHECK
+#define HOME_WORK_1
+//#define ERASE_CHECK
 
 void main()
 {
@@ -186,6 +201,8 @@ void main()
 
 #ifdef HOME_WORK_1
 	ForwardList list(5);
+	list.print();
+
 	for (int i = 0; i < list.get_size(); i++)
 	{
 		list[i] = rand() % 100;
