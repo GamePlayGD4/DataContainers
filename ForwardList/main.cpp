@@ -59,6 +59,15 @@ public:
 		*this = other;
 		cout << "LCopyConstructor:\t" << this << endl;
 	}
+	ForwardList(ForwardList&& other):ForwardList()
+	{
+		/*this->Head = other.Head;
+		this->size = other.size;
+		other.Head = nullptr;
+		other.size = 0;*/
+		*this = std::move(other);
+		cout << "LMoveConstructor:\t" << this << endl;
+	}
 	~ForwardList()
 	{
 		while (Head)pop_front();
@@ -72,6 +81,17 @@ public:
 			push_front(Temp->Data);
 		reverse();
 		cout << "LCopyAssignment:\t" << this << endl;
+		return *this;
+	}
+	ForwardList& operator=(ForwardList&& other)
+	{
+		if (this == &other)return *this;
+		while (Head)pop_front();
+		this->Head = other.Head;
+		this->size = other.size;
+		other.Head = nullptr;
+		other.size = 0;
+		cout << "LMoveAssignment:\t" << endl;
 		return *this;
 	}
 	int& operator[](int Index)
@@ -212,8 +232,8 @@ public:
 //#define HOME_WORK_1
 //#define ERASE_CHECK
 //#define COPY_SEMANTIC_CHECK
-//#define OPERATORPLUS_CHECK
-#define PERFORMANCE_CHECK
+#define OPERATORPLUS_CHECK
+//#define PERFORMANCE_CHECK
 
 void main()
 {
@@ -302,14 +322,16 @@ void main()
 #ifdef OPERATORPLUS_CHECK
 
 	ForwardList list1;
-	list1.push_back(1);
-	list1.push_back(2);
 	list1.push_back(3);
+	list1.push_back(5);
+	list1.push_back(8);
 	ForwardList list2;
 	list2.push_back(4);
 	list2.push_back(5);
 	list2.push_back(6);
+	cout << delimiter << endl;
 	ForwardList list3 = list1 + list2;
+	cout << delimiter << endl;
 	list3.print();
 #endif // OPERATORPLUS_CHECK
 
