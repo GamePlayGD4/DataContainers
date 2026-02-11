@@ -1,4 +1,5 @@
 #include<iostream>
+#include<ctime>
 using std::cin;
 using std::cout;
 using std::endl;
@@ -15,12 +16,18 @@ public:
 	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		count++;
+#ifdef DEBUG
 		cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	~Element()
 	{
 		count--;
+#ifdef DEBUG
 		cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	friend class ForwardList;
 };
@@ -40,15 +47,16 @@ public:
 		size = 0;
 		cout << "LConstructor:\t" << this << endl;
 	}
-	explicit ForwardList(int size):ForwardList()
+	explicit ForwardList(int size) :ForwardList()
 	{
 		while (size--)push_front(0);
 		cout << "1argConstructor:\t" << this << endl;
 	}
 	ForwardList(const ForwardList& other) :ForwardList()
 	{
-		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-			push_back(Temp->Data);
+		/*for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);*/
+		*this = other;
 		cout << "LCopyConstructor:\t" << this << endl;
 	}
 	~ForwardList()
@@ -61,7 +69,9 @@ public:
 		if (this == &other)return *this;
 		while (Head)pop_front();
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-			push_back(Temp->Data);
+			push_front(Temp->Data);
+		reverse();
+		cout << "LCopyAssignment:\t" << this << endl;
 		return *this;
 	}
 	int& operator[](int Index)
@@ -72,7 +82,7 @@ public:
 	}
 	ForwardList operator+(const ForwardList& other) const
 	{
-		ForwardList result;  
+		ForwardList result;
 
 		for (Element* Temp = this->Head; Temp; Temp = Temp->pNext)
 			result.push_back(Temp->Data);
@@ -94,7 +104,7 @@ public:
 	void push_back(int Data)
 	{
 		if (Head == nullptr)return push_front(Data);
-		Element* New = new Element(Data);
+		//Element* New = new Element(Data);
 		Element* Temp = Head;
 		while (Temp->pNext) Temp = Temp->pNext;
 		Temp->pNext = new Element(Data);
@@ -162,13 +172,25 @@ public:
 			Temp = Temp->pNext;
 		}
 
-		Element* Erased = Temp->pNext; 
+		Element* Erased = Temp->pNext;
 		Temp->pNext = Erased->pNext;
-		delete Erased;                 
-		size--;                     
+		delete Erased;
+		size--;
 	}
 
 	/// /////////////
+
+	void reverse()
+	{
+		ForwardList reverse;
+		while (Head)
+		{
+			reverse.push_front(Head->Data);
+			pop_front();
+		}
+		this->Head = reverse.Head;
+		reverse.Head = nullptr;
+	}
 
 	void print()const
 	{
@@ -189,7 +211,9 @@ public:
 //#define SIZE_CHECK
 //#define HOME_WORK_1
 //#define ERASE_CHECK
-//#define COPY_ASSIGNMENT_CHECK
+//#define COPY_SEMANTIC_CHECK
+//#define OPERATORPLUS_CHECK
+#define PERFORMANCE_CHECK
 
 void main()
 {
@@ -260,7 +284,7 @@ void main()
 	list1.print();
 #endif // ERASE_CHECK
 
-#ifdef COPY_ASSIGNMENT_CHECK
+#ifdef COPY_SEMANTIC_CHECK
 	ForwardList list1;
 	list1.push_back(3);
 	list1.push_back(5);
@@ -273,7 +297,9 @@ void main()
 	ForwardList list2;
 	list2 = list1;
 	list2.print();
-#endif // COPY_ASSIGNMENT_CHECK
+#endif // COPY_SEMANTIC_CHECK
+
+#ifdef OPERATORPLUS_CHECK
 
 	ForwardList list1;
 	list1.push_back(1);
@@ -285,4 +311,30 @@ void main()
 	list2.push_back(6);
 	ForwardList list3 = list1 + list2;
 	list3.print();
+#endif // OPERATORPLUS_CHECK
+
+#ifdef PERFORMANCE_CHECK
+
+	int n;
+	cout << "Введите размер списка: "; cin >> n;
+	ForwardList list1;
+	clock_t start = clock();
+	for (int i = 0; i < n; i++)
+	{
+		list1.push_front(rand() % 100);
+	}
+	clock_t end = clock();
+	//list1.print();
+	cout << delimiter << endl;
+	cout << "list1 заполнен за " << double (end - start) / CLOCKS_PER_SEC << " секунд" << endl;
+	cout << delimiter << endl;
+	start = clock();
+	system("PAUSE");
+	ForwardList list2 = list1;
+	end = clock();
+	cout << delimiter << endl;
+	cout << "list2 скопирован за " << double(end - start) / CLOCKS_PER_SEC << " секунд" << endl;
+	cout << delimiter << endl;
+	//list2.print();
+#endif // PERFORMANCE_CHECK
 }
