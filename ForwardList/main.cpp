@@ -52,6 +52,14 @@ public:
 		while (size--)push_front(0);
 		cout << "1argConstructor:\t" << this << endl;
 	}
+	ForwardList(const std::initializer_list<int> il) : ForwardList()
+	{
+		cout << typeid(il.begin()).name() << endl;
+		for (int const* it = il.begin(); it != il.end(); it++)
+		{
+			push_back(*it);
+		}
+	}
 	ForwardList(const ForwardList& other) :ForwardList()
 	{
 		/*for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
@@ -232,8 +240,9 @@ public:
 //#define HOME_WORK_1
 //#define ERASE_CHECK
 //#define COPY_SEMANTIC_CHECK
-#define OPERATORPLUS_CHECK
+//#define OPERATORPLUS_CHECK
 //#define PERFORMANCE_CHECK
+//#define RANGE_BASED_FOR_ARRAY
 
 void main()
 {
@@ -359,4 +368,22 @@ void main()
 	cout << delimiter << endl;
 	//list2.print();
 #endif // PERFORMANCE_CHECK
+
+#ifdef RANGE_BASED_FOR_ARRAY
+	int arr[] = { 3, 5, 8, 13, 21 };
+	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+	{
+		cout << arr[i] << tab;
+	}
+	cout << endl;
+
+	for (int i : arr)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+#endif // RANGE_BASED_FOR_ARRAY
+
+	ForwardList list = { 3, 5, 8, 13, 21 };
+	list.print();
 }
