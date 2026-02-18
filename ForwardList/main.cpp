@@ -30,8 +30,40 @@ public:
 
 	}
 	friend class ForwardList;
+	friend class Iterator;
 };
 int Element::count = 0;
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp = nullptr) :Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+	~Iterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	bool operator==(const Iterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const Iterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+	int operator*()
+	{
+		return Temp->Data;
+	}
+};
 class ForwardList
 {
 	Element* Head;
@@ -40,6 +72,14 @@ public:
 	int get_size()const
 	{
 		return size;
+	}
+	Iterator begin()
+	{
+		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
 	}
 	ForwardList()
 	{
@@ -385,5 +425,10 @@ void main()
 #endif // RANGE_BASED_FOR_ARRAY
 
 	ForwardList list = { 3, 5, 8, 13, 21 };
-	list.print();
+	//list.print();
+	for (int i : list)
+	{
+		cout << i << endl;
+	}
+	cout << endl;
 }
