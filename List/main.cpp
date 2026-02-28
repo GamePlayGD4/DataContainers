@@ -1,5 +1,7 @@
 #include<iostream>
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
 
 #define tab "\t"
 #define delimiter "\n----------------------\n"
@@ -27,6 +29,63 @@ class List
 
 	size_t size;
 public:
+
+	class Iterator
+	{
+		Element* Temp;
+	public:
+		Iterator(Element* Temp = nullptr) : Temp(Temp)
+		{
+			cout << "ItConstructor:\t" << this << endl;
+		}
+		~Iterator()
+		{
+			cout << "ItDestructor:\t" << this << endl;
+		}
+		//operators
+		bool operator!=(const Iterator& other)const
+		{
+			return Temp != other.Temp;
+		}
+		Iterator operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		int operator*()
+		{
+			return Temp->Data;
+		}
+	};
+
+	class ConstIterator
+	{
+		Element* Temp;
+	public:
+		ConstIterator(Element* Temp = nullptr) : Temp(Temp)
+		{
+			cout << "ItConstructor:\t" << this << endl;
+		}
+		~ConstIterator()
+		{
+			cout << "ItDestructor:\t" << this << endl;
+		}
+		//operators
+		bool operator!=(const ConstIterator& other)const
+		{
+			return Temp != other.Temp;
+		}
+		ConstIterator operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		int operator*()
+		{
+			return Temp->Data;
+		}
+	};
+
 	int get_size()const
 	{
 		return size;
@@ -48,6 +107,8 @@ public:
 		while (Head)pop_front();
 		cout << "LDestructor" << this << endl;
 	}
+
+	// adding elements
 	void push_front(int Data) 
 	{
 		if (Head == nullptr && Tail == nullptr)
@@ -83,42 +144,7 @@ public:
 		Temp->pPrev->pNext = Temp->pNext->pPrev = new Element(Data, Temp->pNext, Temp->pPrev);
 		size++;
 	}
-	void erase(int index)
-	{
-		if (index >= size)return;
-		if (index == size - 1)return pop_back();
-		if (index == 0)return pop_front();
-		Element* Temp;
-		if (index < size / 2)
-		{
-			Temp = Head;
-			for (int i = 0; i < index; i++)Temp = Temp->pNext;
-		}
-		else
-		{
-			Temp = Tail;
-			for (int i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
-		}
-		Temp->pPrev->pNext = Temp->pNext;
-		Temp->pNext->pPrev = Temp->pPrev;
-		delete Temp;
-		size--;
-	}
-	void print()const
-	{
-		cout << "Head:\t" << Head << endl;
-		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
-			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
-		cout << "Tail:\t" << Tail << endl;
-		cout << "Количество элементов в списке: " << size << endl;
-	}
-	void reverse_print()const
-	{
-		cout << "Tail:\t" << Tail << endl;
-		for (Element* Temp = Tail; Temp; Temp->pPrev)
-			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
-		cout << "Head:\t" << Tail << endl;
-	}
+
 	void pop_front()
 	{
 		if (Head == nullptr && Tail == nullptr)return;
@@ -151,6 +177,64 @@ public:
 		}
 		size--;
 	}
+
+	// removing elements
+	void erase(int index)
+	{
+		if (index >= size)return;
+		if (index == size - 1)return pop_back();
+		if (index == 0)return pop_front();
+		Element* Temp;
+		if (index < size / 2)
+		{
+			Temp = Head;
+			for (int i = 0; i < index; i++)Temp = Temp->pNext;
+		}
+		else
+		{
+			Temp = Tail;
+			for (int i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
+		}
+		Temp->pPrev->pNext = Temp->pNext;
+		Temp->pNext->pPrev = Temp->pPrev;
+		delete Temp;
+		size--;
+	}
+	
+	// methods
+
+	void print()const
+	{
+		cout << "Head:\t" << Head << endl;
+		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
+			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
+		cout << "Tail:\t" << Tail << endl;
+		cout << "Количество элементов в списке: " << size << endl;
+	}
+	void reverse_print()const
+	{
+		cout << "Tail:\t" << Tail << endl;
+		for (Element* Temp = Tail; Temp; Temp->pPrev)
+			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
+		cout << "Head:\t" << Tail << endl;
+	}
+	
+	Iterator begin()
+	{
+		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
+	}
+	ConstIterator begin()const
+	{
+		return Head;
+	}
+	ConstIterator end()const
+	{
+		return nullptr;
+	}
 };
 
 //#define BASE_CHECK
@@ -182,5 +266,5 @@ void main()
 #endif // BASE_CHECK
 
 	List list = { 3, 5, 8, 13, 21 };
-	list.print();
+	for (int i : list)cout << i << tab; cout << endl;
 }
