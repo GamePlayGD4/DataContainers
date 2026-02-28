@@ -38,6 +38,11 @@ public:
 		Tail = nullptr;
 		cout << "LConstructor" << this << endl;
 	}
+	List(const std::initializer_list<int>& il) :List()
+	{
+		for (int const* it = il.begin(); it != il.end(); ++it)
+			push_back(*it);
+	}
 	~List()
 	{
 		while (Head)pop_front();
@@ -176,4 +181,6 @@ void main()
 	list.print();
 #endif // BASE_CHECK
 
+	List list = { 3, 5, 8, 13, 21 };
+	list.print();
 }
