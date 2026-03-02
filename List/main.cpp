@@ -26,43 +26,34 @@ class List
 		}
 		friend class List;
 	}*Head, * Tail;
-
 	size_t size;
-public:
 
-	class Iterator
+	class ConstBaseIterator
 	{
+	protected:
 		Element* Temp;
 	public:
-		Iterator(Element* Temp = nullptr) : Temp(Temp)
+		ConstBaseIterator(Element* Temp = nullptr) : Temp(Temp) {}
+		~ConstBaseIterator() {}
+		bool operator==(const ConstBaseIterator& other)const
 		{
-			cout << "ItConstructor:\t" << this << endl;
+			return this->Temp == other.Temp;
 		}
-		~Iterator()
+		bool operator!=(const ConstBaseIterator& other)const
 		{
-			cout << "ItDestructor:\t" << this << endl;
+			return this->Temp != other.Temp;
 		}
-		//operators
-		bool operator!=(const Iterator& other)const
-		{
-			return Temp != other.Temp;
-		}
-		Iterator operator++()
-		{
-			Temp = Temp->pNext;
-			return *this;
-		}
-		int operator*()
+		int operator*()const
 		{
 			return Temp->Data;
 		}
 	};
+public:
 
-	class ConstIterator
+	class ConstIterator: public ConstBaseIterator
 	{
-		Element* Temp;
 	public:
-		ConstIterator(Element* Temp = nullptr) : Temp(Temp)
+		ConstIterator(Element* Temp = nullptr) : ConstBaseIterator(Temp)
 		{
 			cout << "ItConstructor:\t" << this << endl;
 		}
@@ -70,19 +61,63 @@ public:
 		{
 			cout << "ItDestructor:\t" << this << endl;
 		}
-		//operators
-		bool operator!=(const ConstIterator& other)const
-		{
-			return Temp != other.Temp;
-		}
-		ConstIterator operator++()
+		
+		ConstIterator& operator++()
 		{
 			Temp = Temp->pNext;
 			return *this;
 		}
+		ConstIterator operator++(int)
+		{
+			ConstIterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}
+		ConstIterator& operator--()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		ConstIterator operator--(int)
+		{
+			ConstIterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+
 		int operator*()
 		{
 			return Temp->Data;
+		}
+	};
+
+	class ConstReverseIterator:public ConstBaseIterator
+	{
+	public:
+		ConstReverseIterator(Element* Temp = nullptr) :ConstBaseIterator(Temp) {}
+		~ConstReverseIterator() {}
+
+		ConstReverseIterator& operator++()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		ConstReverseIterator operator++(int)
+		{
+			ConstReverseIterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+		ConstReverseIterator& operator--()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		ConstReverseIterator operator--(int)
+		{
+			ConstReverseIterator old = *this;
+			Temp = Temp->pNext;
+			return old;
 		}
 	};
 
@@ -90,6 +125,61 @@ public:
 	{
 		return size;
 	}
+
+	class Iterator : public ConstIterator
+	{
+	public:
+		Iterator(Element* Temp = nullptr) : ConstIterator(Temp) {}
+		~Iterator() {}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+	};
+
+	class ReverseIterator : public ConstReverseIterator
+	{
+	public:
+		ReverseIterator(Element* Temp) : ConstReverseIterator(Temp) {}
+		~ReverseIterator() {}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+	};
+	ConstIterator cbegin()const
+	{
+		return Head;
+	}
+	ConstIterator cend()const
+	{
+		return nullptr;
+	}
+	ConstReverseIterator crbegin()const
+	{
+		return Tail;
+	}
+	ConstReverseIterator crend()const
+	{
+		return nullptr;
+	}
+	Iterator begin()
+	{
+		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
+	}
+	ReverseIterator rbegin()
+	{
+		return Tail;
+	}
+	ReverseIterator rend()
+	{
+		return nullptr;
+	}
+
 	List()
 	{
 		size = 0;
@@ -219,22 +309,7 @@ public:
 		cout << "Head:\t" << Tail << endl;
 	}
 	
-	Iterator begin()
-	{
-		return Head;
-	}
-	Iterator end()
-	{
-		return nullptr;
-	}
-	ConstIterator begin()const
-	{
-		return Head;
-	}
-	ConstIterator end()const
-	{
-		return nullptr;
-	}
+	
 };
 
 //#define BASE_CHECK
@@ -267,4 +342,16 @@ void main()
 
 	List list = { 3, 5, 8, 13, 21 };
 	for (int i : list)cout << i << tab; cout << endl;
+	for (List::Iterator it = list.begin(); it != list.end(); it++)
+	{
+		*it *= 100;
+		cout << *it << tab;
+	}
+	cout << endl;
+
+	for (List::ConstReverseIterator it = list.rbegin(); it != list.rend(); it++)
+	{
+		cout << *it << tab;
+	}
+	cout << endl;
 }
