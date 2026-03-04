@@ -1,4 +1,4 @@
-#include<iostream>
+Ôªø#include<iostream>
 using std::cout;
 using std::cin;
 using std::endl;
@@ -18,11 +18,17 @@ class List
 		Element(T Data, Element* pNext = nullptr, Element* pPrev = nullptr) :
 			Data(Data), pNext(pNext), pPrev(pPrev)
 		{
+#ifdef DEBUG
 			cout << "EConstructor\t" << this << endl;
+#endif // DEBUG
+
 		}
 		~Element()
 		{
+#ifdef DEBUG
 			cout << "EDestructor\t" << this << endl;
+#endif // DEBUG
+
 		}
 		friend class List;
 	}*Head, * Tail;
@@ -43,7 +49,7 @@ class List
 		{
 			return this->Temp != other.Temp;
 		}
-		int operator*()const
+		T operator*()const
 		{
 			return Temp->Data;
 		}
@@ -77,11 +83,6 @@ public:
 			ConstIterator old = *this;
 			ConstBaseIterator::Temp = ConstBaseIterator::Temp->pPrev;
 			return old;
-		}
-
-		int operator*()
-		{
-			return ConstBaseIterator::Temp->Data;
 		}
 	};
 
@@ -125,7 +126,7 @@ public:
 	public:
 		Iterator(Element* Temp = nullptr) : ConstIterator(Temp) {}
 		~Iterator() {}
-		int& operator*()
+		T& operator*()
 		{
 			return ConstBaseIterator::Temp->Data;
 		}
@@ -136,7 +137,7 @@ public:
 	public:
 		ReverseIterator(Element* Temp) : ConstReverseIterator(Temp) {}
 		~ReverseIterator() {}
-		int& operator*()
+		T& operator*()
 		{
 			return ConstBaseIterator::Temp->Data;
 		}
@@ -193,7 +194,7 @@ public:
 	}
 
 	// adding elements
-	void push_front(int Data) 
+	void push_front(T Data) 
 	{
 		if (Head == nullptr && Tail == nullptr)
 			Head = Tail = new Element(Data);
@@ -201,7 +202,7 @@ public:
 			Head = Head->pPrev = new Element(Data, Head);
 		size++;
 	}
-	void push_back(int Data)
+	void push_back(T Data)
 	{
 		if (Head == nullptr && Tail == nullptr)
 			Head = Tail = new Element(Data);
@@ -209,7 +210,7 @@ public:
 			Tail = Tail->pNext = new Element(Data, nullptr, Tail);
 		size++;
 	}
-	void insert(int Data, int Index)
+	void insert(T Data, int Index)
 	{
 		if (Index > size)return;
 		if (Index == size - 1)return push_back(Data);
@@ -293,7 +294,7 @@ public:
 		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 		cout << "Tail:\t" << Tail << endl;
-		cout << " ÓÎË˜ÂÒÚ‚Ó ˝ÎÂÏÂÌÚÓ‚ ‚ ÒÔËÒÍÂ: " << size << endl;
+		cout << "–ö–æ–ª–∏—á–µ—Å—Ç–≤–æ —ç–ª–µ–º–µ–Ω—Ç–æ–≤ –≤ —Å–ø–∏—Å–∫–µ: " << size << endl;
 	}
 	void reverse_print()const
 	{
@@ -307,13 +308,14 @@ public:
 };
 
 //#define BASE_CHECK
+//#define ITERATORS_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
 #ifdef BASE_CHECK
 	int n;
-	cout << "¬‚Â‰ËÚÂ ‡ÁÏÂ ÒÔËÒÍ‡: "; cin >> n;
+	cout << "–í–≤–µ–¥–∏—Ç–µ —Ä–∞–∑–º–µ—Ä —Å–ø–∏—Å–∫–∞: "; cin >> n;
 	List list;
 	for (int i = 0; i < n; i++)
 	{
@@ -324,16 +326,17 @@ void main()
 
 	int index;
 	int value;
-	//cout << "¬‚Â‰ËÚÂ ËÌ‰ÂÍÒ ‰Ó·‡‚ÎˇÂÏÓ„Ó ˝ÎÂÏÂÌÚ‡: "; cin >> index;
-	//cout << "¬‚Â‰ËÚÂ ÁÌ‡˜ÂÌËÂ ‰Ó·‡‚ÎˇÂÏÓ„Ó ˝ÎÂÏÂÌÚ‡: "; cin >> value;
+	//cout << "–í–≤–µ–¥–∏—Ç–µ –∏–Ω–¥–µ–∫—Å –¥–æ–±–∞–≤–ª—è–µ–º–æ–≥–æ —ç–ª–µ–º–µ–Ω—Ç–∞: "; cin >> index;
+	//cout << "–í–≤–µ–¥–∏—Ç–µ –∑–Ω–∞—á–µ–Ω–∏–µ –¥–æ–±–∞–≤–ª—è–µ–º–æ–≥–æ —ç–ª–µ–º–µ–Ω—Ç–∞: "; cin >> value;
 	//list.insert(value, index);
 
-	cout << "¬‚Â‰ËÚÂ ËÌ‰ÂÍÒ Û‰‡ÎˇÂÏÓ„Ó ˝ÎÂÏÂÌÚ‡: "; cin >> index;
+	cout << "–í–≤–µ–¥–∏—Ç–µ –∏–Ω–¥–µ–∫—Å —É–¥–∞–ª—è–µ–º–æ–≥–æ —ç–ª–µ–º–µ–Ω—Ç–∞: "; cin >> index;
 	list.erase(index);
 
 	list.print();
 #endif // BASE_CHECK
 
+#ifdef ITERATORS_CHECK
 	List<int> list = { 3, 5, 8, 13, 21 };
 	for (int i : list)cout << i << tab; cout << endl;
 	for (List<int>::Iterator it = list.begin(); it != list.end(); it++)
@@ -348,11 +351,30 @@ void main()
 		cout << *it << tab;
 	}
 	cout << endl;
+#endif // ITERATORS_CHECK
+
+	List<int> i_list = { 3, 5, 8, 13, 21 };
+	for (int i : i_list)cout << i << tab; cout << endl;
+
+	for (List<int>::ReverseIterator it = i_list.rbegin(); it != i_list.rend(); ++it)
+		cout << *it << tab;
+	cout << endl;
 
 	List<double> doublelist = {12.5, 123, 333.1232};
-	doublelist.print();
-	
+	//doublelist.print();
+	for (double i : doublelist)cout << i << tab; cout << endl;
+	for (List<double>::ReverseIterator it = doublelist.rbegin(); it != doublelist.rend(); ++it)
+		cout << *it << tab;
+	cout << endl;
+
 	List<char> charlist = { 'a', 'b', 'c', 'd', 'e' };
 
-	List<char*> charpointerlist = { "Hello World!" };
+	List<const char*> charpointerlist = { "Hello", "World!" };
+	for (const char* i : charpointerlist)cout << i << tab; cout << endl;
+
+	List <std::string> s_list = { "–•–æ—Ä–æ—à–æ", "–∂–∏–≤—ë—Ç", "–Ω–∞", "—Å–≤–µ—Ç–µ", "–í–∏–Ω–Ω–∏", "–ü—É—Ö" };
+	for (std::string i : s_list)cout << i << tab; cout << endl;
+	for (List<std::string>::ReverseIterator it = s_list.rbegin(); it != s_list.rend(); ++it)
+		cout << *it << tab;
+	cout << endl;
 }
