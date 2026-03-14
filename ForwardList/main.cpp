@@ -21,22 +21,8 @@ template<typename T>class Element
 	Element<T>* pNext;
 	static int count;
 public:
-	Element(T Data, Element<T>* pNext = nullptr) :Data(Data), pNext(pNext)
-	{
-		count++;
-#ifdef DEBUG
-		cout << "EConstructor:\t" << this << endl;
-#endif // DEBUG
-
-	}
-	~Element()
-	{
-		count--;
-#ifdef DEBUG
-		cout << "EDestructor:\t" << this << endl;
-#endif // DEBUG
-
-	}
+	Element(T Data, Element<T>* pNext = nullptr);
+	~Element();
 	friend class ForwardList<T>;
 	friend class Iterator<T>;
 	friend class ConstIterator<T>;
@@ -450,6 +436,32 @@ void ForwardList<T>::print()const
 
 //////------------------ ForwardList methods end ---------//
 //-------------------------------------------------------//
+
+
+//////------------------------------------------------////
+/////------------------ Element methods ----------///
+
+template<typename T>
+Element<T>::Element(T Data, Element<T>* pNext) :Data(Data), pNext(pNext)
+{
+	count++;
+#ifdef DEBUG
+	cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+
+}
+template<typename T>
+Element<T>::~Element()
+{
+	count--;
+#ifdef DEBUG
+	cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
+}
+
+//////------------------ Element methods end ---------//
+//-------------------------------------------------------//
+
 
 template<typename T>ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right) 
 {
