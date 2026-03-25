@@ -6,18 +6,20 @@ using std::endl;
 void Elevator(int floor);
 int Factorial(int n);
 double Power(double a, int n);
+void Fibonacci(int n, int a = 0, int b = 1);
 
 void main()
 {
 	setlocale(LC_ALL, "");
 	//cout << "Hello world!";
 	int n;
-	int a;
-	cout << "¬ведите основание степени: "; cin >> a;
-	cout << "¬ведите показатель степени: "; cin >> n;
+	//int a;
+	cout << "¬ведите предел р€да фибоначи: "; cin >> n;
+	Fibonacci(n);
+	cout << endl;
 	//Elevator(n);
 	//main();
-	cout << Power(a, n) << endl;
+	//cout << Power(a, n) << endl;
 	main();
 }
 
@@ -47,4 +49,12 @@ double Power(double a, int n)
 	else if (n > 0) return a * Power(a, n - 1);
 	else return 1 / Power(a, -n);*/
 	//else return 1 / a * Power(a, n + 1);
+}
+
+
+void Fibonacci(int n, int a, int b)
+{
+	if (a > n)return;
+	cout << a << "\t";
+	Fibonacci(n, b, a + b);
 }
