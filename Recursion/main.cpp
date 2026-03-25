@@ -3,6 +3,23 @@ using std::cout;
 using std::cin;
 using std::endl;
 
+class Fibonacci
+{
+	static void Calculate(int n, int a, int b)
+	{
+		if (a > n)return;
+		cout << a << "\t";
+		Calculate(n, b, a + b);
+	}
+public:
+	static void Calculate(int n)
+	{
+		Calculate(n, 0, 1);
+		cout << endl;
+	}
+};
+
+
 void Elevator(int floor);
 int Factorial(int n);
 double Power(double a, int n);
@@ -15,7 +32,8 @@ void main()
 	int n;
 	//int a;
 	cout << "Введите предел ряда фибоначи: "; cin >> n;
-	Fibonacci(n);
+	//Fibonacci(n);
+	Fibonacci::Calculate(n, 22, 33);
 	cout << endl;
 	//Elevator(n);
 	//main();
