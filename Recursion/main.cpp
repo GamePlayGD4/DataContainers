@@ -18,6 +18,7 @@ void main()
 	//Elevator(n);
 	//main();
 	cout << Power(a, n) << endl;
+	main();
 }
 
 void Elevator(int floor)
@@ -41,5 +42,9 @@ int Factorial(int n)
 
 double Power(double a, int n)
 {
-	return n == 0 ? 1 : a * Power(a, n - 1);
+	return n == 0 ? 1 : n > 0 ? a * Power(a, n - 1) : 1 / Power(a, -n);
+	/*if (n == 0)return 1;
+	else if (n > 0) return a * Power(a, n - 1);
+	else return 1 / Power(a, -n);*/
+	//else return 1 / a * Power(a, n + 1);
 }
