@@ -33,7 +33,7 @@ void main()
 	//int a;
 	cout << "Введите предел ряда фибоначи: "; cin >> n;
 	//Fibonacci(n);
-	Fibonacci::Calculate(n, 22, 33);
+	Fibonacci::Calculate(n);
 	cout << endl;
 	//Elevator(n);
 	//main();
